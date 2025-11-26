@@ -11,10 +11,12 @@ Games with inbuilt games that you can play in a browser.
 
 
 ### Folder structure
+```
 Inbuilt_Games
-|── backend/
-|── frontend/
-|└── index.html
-|└── js.script
-|└── style.css
-| ── readme.md
+ |── backend/
+ |── frontend/
+ |└── index.html
+ |└── js.script
+ |└── style.css
+| | ── readme.md
+```
