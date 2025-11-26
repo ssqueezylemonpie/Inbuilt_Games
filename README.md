@@ -18,5 +18,5 @@ Inbuilt_Games
  |└── index.html
  |└── js.script
  |└── style.css
-| ── readme.md
+ | ── readme.md
 ```
