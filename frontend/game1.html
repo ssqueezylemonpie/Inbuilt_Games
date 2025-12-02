@@ -14,22 +14,99 @@
         </nav>
     </header>
 
+</main>
+
     <main class="container">
         <h1>Target Practice</h1>
-        <p class="muted">(This is a placeholder page demonstrating a separate HTML game using the shared CSS.)</p>
-        <p>When you finish a round, click below to submit a demo score to the shared leaderboard.</p>
-        <button id="btnScore" class="primary">Submit demo score (random)</button>
+        <p class="muted">Click the target as many times as you can before time runs out.</p>
+
+        <div style="display:flex;gap:12px;align-items:center;margin:14px 0">
+            <button id="btnStart" class="primary">Start (30s)</button>
+            <div>Time: <span id="time">30</span>s</div>
+            <div>Score: <strong id="score">0</strong></div>
+            <button id="btnSubmit" class="primary" style="background:linear-gradient(90deg,#06b6d4,#4f46e5)">Submit Score</button>
+        </div>
+
+        <div id="playArea" style="height:420px;background:rgba(255,255,255,0.01);border-radius:12px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.02)">
+            <!-- target will be created here -->
+        </div>
     </main>
 
     <script src="js.script"></script>
     <script>
-        document.getElementById('btnScore').addEventListener('click', ()=>{
-            const score = Math.floor(Math.random()*1500)+50;
-            const current = localStorage.getItem('ig_current') || '';
-            const name = current ? (JSON.parse(localStorage.getItem('ig_users')||'[]').find(u=>u.email===current)?.name || current) : 'Guest';
-            window.IG.addScore({name, email: current, score, game:'Target Practice'});
-            alert('Score '+score+' submitted to leaderboard');
-        });
+        (function(){
+            const playArea = document.getElementById('playArea');
+            const btnStart = document.getElementById('btnStart');
+            const btnSubmit = document.getElementById('btnSubmit');
+            const timeEl = document.getElementById('time');
+            const scoreEl = document.getElementById('score');
+
+            let score = 0;
+            let timeLeft = 30;
+            let timer = null;
+            let target = null;
+
+            function rand(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+
+            function createTarget(){
+                if(target) target.remove();
+                target = document.createElement('div');
+                const size = rand(36,68);
+                target.style.width = size+'px';
+                target.style.height = size+'px';
+                target.style.borderRadius = '50%';
+                target.style.background = 'radial-gradient(circle at 40% 35%, #fff8, #f59e0b)';
+                target.style.position = 'absolute';
+                target.style.cursor = 'pointer';
+                // position within play area
+                const pw = playArea.clientWidth - size - 6;
+                const ph = playArea.clientHeight - size - 6;
+                const x = rand(6, Math.max(6,pw));
+                const y = rand(6, Math.max(6,ph));
+                target.style.left = x+'px';
+                target.style.top = y+'px';
+                target.addEventListener('click', onHit);
+                playArea.appendChild(target);
+            }
+
+            function onHit(){
+                score += Math.round(10 + Math.random()*20);
+                scoreEl.textContent = score;
+                // brief scale animation
+                target.style.transform = 'scale(0.8)';
+                setTimeout(()=>{
+                    target.style.transform = '';
+                    createTarget();
+                },120);
+            }
+
+            function tick(){
+                timeLeft -= 1;
+                timeEl.textContent = timeLeft;
+                if(timeLeft <= 0){
+                    clearInterval(timer);
+                    timer = null;
+                    if(target) target.remove();
+                    alert('Finished! Your score: ' + score);
+                }
+            }
+
+            btnStart.addEventListener('click', ()=>{
+                if(timer) return; // already running
+                score = 0; timeLeft = 30;
+                scoreEl.textContent = score; timeEl.textContent = timeLeft;
+                createTarget();
+                timer = setInterval(tick, 1000);
+            });
+
+            btnSubmit.addEventListener('click', ()=>{
+                const current = localStorage.getItem('ig_current') || '';
+                const users = JSON.parse(localStorage.getItem('ig_users')||'[]');
+                const name = current ? (users.find(u=>u.email===current)?.name || current) : 'Guest';
+                window.IG.addScore({name, email: current, score, game:'Target Practice'});
+                alert('Score submitted: '+score);
+            });
+        })();
     </script>
 </body>
 </html>

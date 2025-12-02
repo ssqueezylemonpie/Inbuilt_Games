@@ -16,20 +16,118 @@
 
     <main class="container">
         <h1>Memory Match</h1>
-        <p class="muted">(Placeholder page for a second game.)</p>
-        <p>Click below to submit a demo score to the shared leaderboard.</p>
-        <button id="btnScore2" class="primary">Submit demo score (random)</button>
+        <p class="muted">Flip cards and find matching pairs. Finish with as few moves as possible.</p>
+
+        <div style="display:flex;gap:12px;align-items:center;margin:14px 0">
+            <button id="btnReset" class="primary">New Game</button>
+            <div>Moves: <span id="moves">0</span></div>
+            <div>Matches: <span id="matches">0</span>/8</div>
+            <button id="btnSubmit" class="primary" style="background:linear-gradient(90deg,#06b6d4,#4f46e5)">Submit Score</button>
+        </div>
+
+        <div id="grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:640px">
+            <!-- cards rendered here -->
+        </div>
     </main>
 
     <script src="js.script"></script>
     <script>
-        document.getElementById('btnScore2').addEventListener('click', ()=>{
-            const score = Math.floor(Math.random()*900)+20;
-            const current = localStorage.getItem('ig_current') || '';
-            const name = current ? (JSON.parse(localStorage.getItem('ig_users')||'[]').find(u=>u.email===current)?.name || current) : 'Guest';
-            window.IG.addScore({name, email: current, score, game:'Memory Match'});
-            alert('Score '+score+' submitted to leaderboard');
-        });
+        (function(){
+            const icons = ['🍎','🚗','🐶','⚽','🎵','🌟','🧩','🍩'];
+            const pairs = icons.concat(icons);
+            const grid = document.getElementById('grid');
+            const btnReset = document.getElementById('btnReset');
+            const btnSubmit = document.getElementById('btnSubmit');
+            const movesEl = document.getElementById('moves');
+            const matchesEl = document.getElementById('matches');
+
+            let deck = [];
+            let first = null, second = null;
+            let lock = false;
+            let moves = 0; matches = 0;
+
+            function shuffle(arr){
+                for(let i=arr.length-1;i>0;i--){
+                    const j = Math.floor(Math.random()*(i+1));
+                    [arr[i],arr[j]] = [arr[j],arr[i]];
+                }
+            }
+
+            function render(){
+                grid.innerHTML = '';
+                deck.forEach((val, idx)=>{
+                    const card = document.createElement('button');
+                    card.className = 'game-card memory-card';
+                    card.style.padding = '18px';
+                    card.style.height = '86px';
+                    card.dataset.index = idx;
+                    card.dataset.value = val;
+                    card.innerHTML = '<div class="card-front" style="font-size:28px;display:none">'+val+'</div><div class="card-back" style="font-size:18px;color:var(--muted)">?</div>';
+                    card.addEventListener('click', onCardClick);
+                    grid.appendChild(card);
+                });
+                moves = 0; matches = 0; movesEl.textContent = moves; matchesEl.textContent = matches;
+            }
+
+            function showCard(button){
+                const front = button.querySelector('.card-front');
+                const back = button.querySelector('.card-back');
+                front.style.display = 'block'; back.style.display = 'none';
+                button.disabled = true;
+            }
+            function hideCard(button){
+                const front = button.querySelector('.card-front');
+                const back = button.querySelector('.card-back');
+                front.style.display = 'none'; back.style.display = 'block';
+                button.disabled = false;
+            }
+
+            function onCardClick(e){
+                if(lock) return;
+                const btn = e.currentTarget;
+                showCard(btn);
+                if(!first){ first = btn; return; }
+                if(first === btn) return;
+                second = btn;
+                moves += 1; movesEl.textContent = moves;
+                if(first.dataset.value === second.dataset.value){
+                    // matched
+                    matches += 1; matchesEl.textContent = matches;
+                    first.style.opacity = '0.95'; second.style.opacity = '0.95';
+                    first = null; second = null;
+                    if(matches === icons.length){
+                        setTimeout(()=>{
+                            const score = Math.max(10, 1000 - moves*15);
+                            alert('You finished! Score: '+score);
+                        },200);
+                    }
+                } else {
+                    lock = true;
+                    setTimeout(()=>{
+                        hideCard(first); hideCard(second);
+                        first = null; second = null; lock = false;
+                    },800);
+                }
+            }
+
+            function newGame(){
+                deck = pairs.slice(); shuffle(deck); render();
+            }
+
+            btnReset.addEventListener('click', newGame);
+            btnSubmit.addEventListener('click', ()=>{
+                const current = localStorage.getItem('ig_current') || '';
+                const users = JSON.parse(localStorage.getItem('ig_users')||'[]');
+                const name = current ? (users.find(u=>u.email===current)?.name || current) : 'Guest';
+                // simple score: reward matches and penalize moves
+                const score = Math.max(10, 1000 - moves*15 + matches*50);
+                window.IG.addScore({name, email: current, score, game:'Memory Match'});
+                alert('Score submitted: '+score);
+            });
+
+            // initialize
+            newGame();
+        })();
     </script>
 </body>
 </html>
