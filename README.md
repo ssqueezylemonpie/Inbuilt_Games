@@ -16,6 +16,8 @@ Games with inbuilt games that you can play in a browser.
 Inbuilt_Games
  |── backend/
  |── frontend/  
+ |└── game1.html
+ |└── game2.html
  |└── index.html
  |└── js.script
  |└── style.css

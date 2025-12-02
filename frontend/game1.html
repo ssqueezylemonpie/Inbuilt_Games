@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Target Practice</title>
+    <link rel="stylesheet" href="style.css">
+ </head>
+ <body>
+    <header class="site-header">
+        <div class="brand">Inbuilt Games</div>
+        <nav class="top-nav">
+            <a href="index.html" class="nav-btn">Library</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1>Target Practice</h1>
+        <p class="muted">(This is a placeholder page demonstrating a separate HTML game using the shared CSS.)</p>
+        <p>When you finish a round, click below to submit a demo score to the shared leaderboard.</p>
+        <button id="btnScore" class="primary">Submit demo score (random)</button>
+    </main>
+
+    <script src="js.script"></script>
+    <script>
+        document.getElementById('btnScore').addEventListener('click', ()=>{
+            const score = Math.floor(Math.random()*1500)+50;
+            const current = localStorage.getItem('ig_current') || '';
+            const name = current ? (JSON.parse(localStorage.getItem('ig_users')||'[]').find(u=>u.email===current)?.name || current) : 'Guest';
+            window.IG.addScore({name, email: current, score, game:'Target Practice'});
+            alert('Score '+score+' submitted to leaderboard');
+        });
+    </script>
+</body>
+</html>

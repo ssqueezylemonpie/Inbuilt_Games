@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Memory Match</title>
+    <link rel="stylesheet" href="style.css">
+ </head>
+ <body>
+    <header class="site-header">
+        <div class="brand">Inbuilt Games</div>
+        <nav class="top-nav">
+            <a href="index.html" class="nav-btn">Library</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1>Memory Match</h1>
+        <p class="muted">(Placeholder page for a second game.)</p>
+        <p>Click below to submit a demo score to the shared leaderboard.</p>
+        <button id="btnScore2" class="primary">Submit demo score (random)</button>
+    </main>
+
+    <script src="js.script"></script>
+    <script>
+        document.getElementById('btnScore2').addEventListener('click', ()=>{
+            const score = Math.floor(Math.random()*900)+20;
+            const current = localStorage.getItem('ig_current') || '';
+            const name = current ? (JSON.parse(localStorage.getItem('ig_users')||'[]').find(u=>u.email===current)?.name || current) : 'Guest';
+            window.IG.addScore({name, email: current, score, game:'Memory Match'});
+            alert('Score '+score+' submitted to leaderboard');
+        });
+    </script>
+</body>
+</html>

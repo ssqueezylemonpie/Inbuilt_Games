@@ -3,11 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inbuilt games</title>
-    <link rel="stylesheet" href="/frontend/style.css">
+    <title>Inbuilt Games</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Game libary</h1>
-    <script src="/frontend/js.script"></script>
+    <header class="site-header">
+        <div class="brand">Inbuilt Games</div>
+        <nav class="top-nav">
+            <button id="btn-leaderboard" class="nav-btn">Leaderboard</button>
+            <button id="btn-login" class="nav-btn">Login</button>
+            <button id="btn-register" class="nav-btn">Register</button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="intro">
+            <h1>Game Library</h1>
+            <p>Choose a game to play. All games share the same styling; each game lives in its own HTML file.</p>
+        </section>
+
+        <section class="game-grid" id="gameGrid">
+            <article class="game-card">
+                <a href="game1.html" class="game-link">
+                    <div class="game-thumb">🎯</div>
+                    <h3>Target Practice</h3>
+                    <p class="muted">Quick reflex game</p>
+                </a>
+            </article>
+
+            <article class="game-card">
+                <a href="game2.html" class="game-link">
+                    <div class="game-thumb">🧠</div>
+                    <h3>Memory Match</h3>
+                    <p class="muted">Test your recall</p>
+                </a>
+            </article>
+
+            <!-- Add more game cards linking to separate HTML files here -->
+        </section>
+    </main>
+
+    <!-- Leaderboard modal -->
+    <div id="modalLeaderboard" class="modal" aria-hidden="true">
+        <div class="modal-content">
+            <button class="modal-close" data-close>×</button>
+            <h2>Leaderboard</h2>
+            <ul id="leaderboardList" class="leaderboard-list"></ul>
+        </div>
+    </div>
+
+    <!-- Login modal -->
+    <div id="modalLogin" class="modal" aria-hidden="true">
+        <div class="modal-content">
+            <button class="modal-close" data-close>×</button>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <label>Email<input type="email" name="email" required></label>
+                <label>Password<input type="password" name="password" required></label>
+                <button type="submit" class="primary">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register modal -->
+    <div id="modalRegister" class="modal" aria-hidden="true">
+        <div class="modal-content">
+            <button class="modal-close" data-close>×</button>
+            <h2>Register</h2>
+            <form id="registerForm">
+                <label>Name<input type="text" name="name" required></label>
+                <label>Email<input type="email" name="email" required></label>
+                <label>Password<input type="password" name="password" required></label>
+                <button type="submit" class="primary">Create account</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js.script"></script>
 </body>
 </html>
