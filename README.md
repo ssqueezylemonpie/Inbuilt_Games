@@ -1,28 +1,78 @@
-# Inbuilt_Games
-Games with inbuilt games that you can play in a browser.
+# Inbuilt Games
+
+A small web-based game collection you can play directly in your browser.  
+The project includes two games (Target Practice and Memory Test) and a backend with login, leaderboard, and progress saving.
 
 ---
 
-## Planning for the project
-1. Set up html and css with js script with working games
-2. Setup webserver on linux
-3. Setup database for the features in the project.
 
-### Features
-```
- 1. Login and register option where you can create accounts to save your progress.
- 2. Leaderboard where you can see your own high score and compete with other people.
- 3. A working game libary where you can currently choose between two games: target practice(aim training) and memory test.
-```
-### Folder structure
+## 🚀 Features
+
+- 🔐 **Login & Register** — Create an account to save progress  
+- 🏆 **Leaderboard** — Compare your high scores with others  
+- 🎮 **Game Library** — Currently includes:
+  - Target Practice (Aim Trainer)
+  - Memory Test  
+- 💾 **Database Integration** (for accounts & scores)
+- 🌐 **Web Server** running on Linux
+
+---
+
+## 🗂️ Planning and To-Do List
+
+1. Set up HTML/CSS/JS for the games  
+2. Deploy backend server on Linux  
+3. Integrate database for:
+   - User authentication  
+   - Leaderboard system  
+   - Saving user progress  
+4. Improve UI and add more games (future)
+
+---
+
+## 📁 Folder Structure
+
 ```
 Inbuilt_Games
- |── backend/
- |── frontend/  
- |└── game1.html
- |└── game2.html
- |└── index.html
- |└── js.script
- |└── style.css
- |── readme.md
+├── backend/
+│   └── app.py
+├── static/
+│   └── css/
+│       └── style.css
+├── templates/
+│   ├── index.html
+│   ├── game1.html
+│   ├── game2.html
+│   ├── js.script
+│   └── style.css
+└── README.md
 ```
+
+---
+
+## 🧩 Technologies Used
+
+- Python (Flask)
+- HTML, CSS, JavaScript
+- MariaDB
+- Linux (web server)
+
+---
+
+
+
+---
+
+### 🛠️ Installation & Usage
+
+---
+
+## 📌 Future Improvements
+
+- Add more games  
+- Improve UI/UX
+- Add database(MariaDB)
+- Fix the leaderboard shows the current top scores
+- Add that users can be saved in the database
+
+---
