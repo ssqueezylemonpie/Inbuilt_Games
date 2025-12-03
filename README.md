@@ -21,12 +21,12 @@ The project includes two games (Target Practice and Memory Test) and a backend w
 ## 🗂️ Planning and To-Do List
 
 1. Set up HTML/CSS/JS for the games  
-2. Deploy backend server on Linux  
+2. Deploy backend server on Linux with MariaDB  
 3. Integrate database for:
    - User authentication  
    - Leaderboard system  
    - Saving user progress  
-4. Improve UI and add more games (future)
+4. Improve UI and add more games (in the future)
 
 ---
 
