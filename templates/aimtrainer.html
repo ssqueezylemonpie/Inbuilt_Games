@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Target Practice</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+ </head>
+ <body>
+    <header class="site-header">
+        <div class="brand">Inbuilt Games</div>
+        <nav class="top-nav">
+            <a href="{{ url_for('home') }}" class="nav-btn">Library</a>
+        </nav>
+    </header>
+
+</main>
+    <main class="container">
+        <h1>Target Practice</h1>
+        <p class="muted">Click the target as many times as you can before time runs out.</p>
+
+        <div style="display:flex;gap:12px;align-items:center;margin:14px 0">
+            <button id="btnStart" class="primary">Start (30s)</button>
+            <div>Time: <span id="time">30</span>s</div>
+            <div>Score: <strong id="score">0</strong></div>
+            <button id="btnSubmit" class="primary" style="background:linear-gradient(90deg,#06b6d4,#4f46e5)">Submit Score</button>
+        </div>
+
+        <div id="playArea" style="height:420px;background:rgba(255,255,255,0.01);border-radius:12px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.02)">
+
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/js.script') }}"></script>
+            <script src="{{ url_for('static', filename='js/match.js') }}"></script>
+            <script src="{{ url_for('static', filename='js/aim.js') }}"></script>
+</body>
+</html>

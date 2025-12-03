@@ -25,7 +25,7 @@
 
         <section class="game-grid" id="gameGrid">
             <article class="game-card">
-                <a href="game1.html" class="game-link">
+                <a href="{{ url_for('aimtrainer') }}" class="game-link">
                     <div class="game-thumb">🎯</div>
                     <h3>Target Practice</h3>
                     <p class="muted">Quick reflex game</p>
@@ -33,7 +33,7 @@
             </article>
 
             <article class="game-card">
-                <a href="game2.html" class="game-link">
+                <a href="{{ url_for('match') }}" class="game-link">
                     <div class="game-thumb">🧠</div>
                     <h3>Memory Match</h3>
                     <p class="muted">Test your recall</p>
@@ -78,6 +78,6 @@
         </div>
     </div>
 
-    <script src="js.script"></script>
+        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
