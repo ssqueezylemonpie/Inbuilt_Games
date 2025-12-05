@@ -1,13 +1,17 @@
 import os
 from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
 
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
+app = Flask(__name__,
+            template_folder='templates',
+            static_folder='static')
 
-app = Flask(
-    __name__,
-    template_folder=os.path.join(BASE_DIR, 'templates'),
-    static_folder=os.path.join(BASE_DIR, 'static')
-)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
 
 @app.route('/')
 def home():
@@ -21,8 +25,6 @@ def aimtrainer():
 def match():
     return render_template('match.html')
 
+
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-app.run(debug=True)
