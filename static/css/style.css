@@ -5,15 +5,7 @@
   --accent: #4f46e5;
   --glass: rgba(255, 255, 255, 0.03);
   --radius: 12px;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  height: 100%;
+  --text: #ffffff;
 }
 
 body {
@@ -21,8 +13,6 @@ body {
   font-family: Inter, Segoe UI, Helvetica, Arial, sans-serif;
   background: linear-gradient(180deg, #071022 0%, #0b1220 100%);
   color: #e6eef8;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Header */
@@ -35,8 +25,8 @@ body {
 }
 
 .brand {
-  font-weight: 700;
-  font-size: 18px;
+  font-weight:600;
+  font-size: 20px;
 }
 
 .top-nav {
@@ -46,9 +36,9 @@ body {
 
 .nav-btn {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  color: var(--muted);
+  color: var(--text);
   padding: 8px 12px;
+  border: white solid 0.1rem;
   border-radius: 8px;
   cursor: pointer;
   transition: border-color 0.15s ease, color 0.15s ease;
@@ -87,7 +77,7 @@ body {
   background: var(--card);
   padding: 16px;
   border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.6);
+  box-shadow: 0 6px 18px rgba(255, 255, 255, 0.1);
   transition: transform 0.14s ease, box-shadow 0.14s ease;
 }
 
