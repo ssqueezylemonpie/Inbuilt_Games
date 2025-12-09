@@ -1,24 +1,37 @@
-// Memory Match game (4x4) — uses existing CSS variables and does not modify leaderboard logic
+// Memory Match game (4x4 grid) — integrates with the existing leaderboard system
 (function(){
-  const EMOJIS = ['🍎','🍌','🍇','🍓','🍑','🍍','🥝','🍉']; // 8 unique -> 16 cards
 
+  /* ------------------------------------------------------------
+      Game Setup
+     ------------------------------------------------------------ */
+
+  // 8 unique emojis → duplicated → 16 cards total
+  const EMOJIS = ['🍎','🍌','🍇','🍓','🍑','🍍','🥝','🍉'];
+
+  // Fisher–Yates shuffle for randomizing card positions
   function shuffle(arr){
-    for(let i = arr.length-1; i>0; i--){
-      const j = Math.floor(Math.random()*(i+1));
+    for(let i = arr.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
     return arr;
   }
 
+  /* ------------------------------------------------------------
+      Card Creation
+     ------------------------------------------------------------ */
+
+  // Creates a single card element (button)
   function createCard(value){
     const el = document.createElement('button');
     el.className = 'match-card';
     el.type = 'button';
     el.dataset.value = value;
     el.setAttribute('aria-pressed','false');
-    // basic appearance — leverages existing CSS variables
+
+    // Basic card styles (inherits site CSS variables)
     el.style.background = 'var(--card)';
-    el.style.color = 'transparent';
+    el.style.color = 'transparent';      // hidden until flipped
     el.style.border = '1px solid rgba(255,255,255,0.04)';
     el.style.borderRadius = '8px';
     el.style.padding = '18px 8px';
@@ -29,15 +42,24 @@
     el.style.alignItems = 'center';
     el.style.justifyContent = 'center';
 
+    // Default face-down view
     el.textContent = '❓';
+
     return el;
   }
 
+  /* ------------------------------------------------------------
+      Initialization (runs when DOM is ready)
+     ------------------------------------------------------------ */
+
   function init(){
     const board = document.getElementById('matchBoard');
-    if(!board) return;
+    if(!board) return; // Stop if page does not contain this game
 
-    // create control bar above board (score, moves, reset, submit)
+    /* ------------------------------
+       UI Controls (Score, Moves, Reset, Submit)
+       ------------------------------ */
+
     const ctrl = document.createElement('div');
     ctrl.style.display = 'flex';
     ctrl.style.gap = '12px';
@@ -70,20 +92,30 @@
     ctrl.appendChild(resetBtn);
     ctrl.appendChild(submitBtn);
 
+    // Insert control bar before the game board
     board.parentNode.insertBefore(ctrl, board);
 
+    /* ------------------------------
+       Game State
+       ------------------------------ */
+
+    // Duplicate emojis → shuffle → assign to board
     const symbols = shuffle(EMOJIS.concat(EMOJIS).slice());
 
-    let first = null;
-    let lock = false;
-    let matches = 0;
-    let moves = 0;
+    let first = null;   // first selected card
+    let lock = false;   // prevents clicking during animations
+    let matches = 0;    // number of pairs matched
+    let moves = 0;      // number of card flips (2 flips = 1 move)
+
+    /* ------------------------------------------------------------
+       Rendering the board
+       ------------------------------------------------------------ */
 
     function renderBoard(){
       board.innerHTML = '';
       symbols.forEach(sym => {
         const c = createCard(sym);
-        c.addEventListener('click', onCardClick);
+        c.addEventListener('click', onCardClick); // card click handler
         board.appendChild(c);
       });
       updateLabels();
@@ -94,86 +126,137 @@
       movesLabel.textContent = 'Moves: ' + moves;
     }
 
+    /* ------------------------------------------------------------
+        Card Click Logic
+       ------------------------------------------------------------ */
+
     function onCardClick(e){
       const el = e.currentTarget;
+
+      // Prevent invalid clicks
       if(lock) return;
       if(el.classList.contains('matched')) return;
-      if(el === first) return;
+      if(el === first) return; // same card
 
-      // reveal
+      // Reveal card
       el.textContent = el.dataset.value;
       el.style.color = 'inherit';
       el.style.transform = 'scale(1.02)';
 
+      // First card selected
       if(!first){
         first = el;
         return;
       }
 
-      // second card
+      // Second card selected
       moves += 1;
       const second = el;
+
+      // If match
       if(first.dataset.value === second.dataset.value){
-        // match
         first.classList.add('matched');
         second.classList.add('matched');
+
+        // Styling for matched cards
         first.style.background = 'linear-gradient(90deg,#06b6d4,#4f46e5)';
         second.style.background = 'linear-gradient(90deg,#06b6d4,#4f46e5)';
+
         matches += 1;
         first = null;
         updateLabels();
+
+        // Check for win condition
         if(matches === EMOJIS.length){
           setTimeout(()=>{
             alert('You matched all pairs! Matches: ' + matches + ', Moves: ' + moves);
-            // auto-submit score
-            if(typeof window.IG === 'object' && typeof window.IG.addScore === 'function'){
-              const scoreObj = { name: 'Player', email: '', score: matches*100, game: 'Memory Match' };
-              window.IG.addScore(scoreObj);
+
+            // Auto-submit score (integrates with your IG leaderboard)
+            if(window.IG && typeof window.IG.addScore === 'function'){
+              window.IG.addScore({
+                name: 'Player',
+                email: '',
+                score: matches * 100,
+                game: 'Memory Match'
+              });
             }
           }, 180);
         }
         return;
       }
 
-      // not a match: flip back after a short delay
+      // If NOT a match — flip back after delay
       lock = true;
       setTimeout(()=>{
         first.textContent = '❓';
         first.style.color = 'transparent';
         first.style.transform = '';
+
         second.textContent = '❓';
         second.style.color = 'transparent';
         second.style.transform = '';
+
         first = null;
         lock = false;
         updateLabels();
       }, 700);
     }
 
+    /* ------------------------------------------------------------
+        Reset Button (reshuffle + restart)
+       ------------------------------------------------------------ */
+
     resetBtn.addEventListener('click', ()=>{
-      // reshuffle and reset
       const pool = EMOJIS.concat(EMOJIS).slice();
       shuffle(pool);
-      for(let i=0;i<symbols.length;i++) symbols[i]=pool[i];
-      first = null; lock = false; matches = 0; moves = 0;
+
+      // Replace symbols with the new shuffled version
+      for(let i = 0; i < symbols.length; i++){
+        symbols[i] = pool[i];
+      }
+
+      first = null;
+      lock = false;
+      matches = 0;
+      moves = 0;
+
       renderBoard();
     });
 
+    /* ------------------------------------------------------------
+        Submit Score Button
+       ------------------------------------------------------------ */
+
     submitBtn.addEventListener('click', ()=>{
-      // Manual submit button (in case user wants to resubmit or the game hasn't finished yet)
-      if(typeof window.IG === 'object' && typeof window.IG.addScore === 'function'){
-        const scoreObj = { name: 'Player', email: '', score: matches*100, game: 'Memory Match' };
-        window.IG.addScore(scoreObj);
-        alert('Score submitted: ' + (matches*100));
+      const score = matches * 100;
+
+      if(window.IG && typeof window.IG.addScore === 'function'){
+        window.IG.addScore({
+          name: 'Player',
+          email: '',
+          score: score,
+          game: 'Memory Match'
+        });
+        alert('Score submitted: ' + score);
       } else {
-        alert('No leaderboard present — local score: ' + matches + ' matches (' + (matches*100) + ' points)');
+        alert('No leaderboard available — local score: ' + score);
       }
     });
+
+    /* ------------------------------------------------------------
+       Render initial board
+       ------------------------------------------------------------ */
 
     renderBoard();
   }
 
-  // init on DOM ready
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
+  /* ------------------------------------------------------------
+      Wait for DOM to load before initializing
+     ------------------------------------------------------------ */
+
+  if(document.readyState === 'loading')
+    document.addEventListener('DOMContentLoaded', init);
+  else
+    init();
+
 })();
