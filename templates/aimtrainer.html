@@ -13,8 +13,6 @@
             <a href="{{ url_for('home') }}" class="nav-btn">Library</a>
         </nav>
     </header>
-
-</main>
     <main class="container">
         <h1>Target Practice</h1>
         <p class="muted">Click the target as many times as you can before time runs out.</p>
@@ -31,7 +29,8 @@
         </div>
     </main>
 
-    <script src="{{ url_for('static', filename='js/js.script') }}"></script>
-            <script src="{{ url_for('static', filename='js/match.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/aim.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/match.js') }}"></script>
 </body>
 </html>
