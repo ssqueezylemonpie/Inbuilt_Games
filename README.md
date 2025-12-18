@@ -65,8 +65,7 @@ Inbuilt_Games
 
 ### 🛠️ Installation
 
-- **Essentials**: Python 3.10+ and `pip` installed.
-- (Optional) A virtual environment is recommended.
+- **Essentials**: Python 3.10+ and `pip` installed. A virtual environment is recommended.
 
 Windows (PowerShell) quick start:
 
