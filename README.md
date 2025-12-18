@@ -63,9 +63,34 @@ Inbuilt_Games
 
 ---
 
-### 🛠️ Installation & Usage
+### 🛠️ Installation
 
+- **Essentials**: Python 3.10+ and `pip` installed.
+- (Optional) A virtual environment is recommended.
 
+Windows (PowerShell) quick start:
+
+```
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install -r requirements.txt  # if you have one
+# or, install the minimal dependency:
+pip install Flask
+```
+
+Run the server:
+
+```
+python backend\app.py
+```
+The app will be available at `http://127.0.0.1:5000` by default.
+
+### ⚙️ Usage
+
+- Open your browser and go to `http://127.0.0.1:5000`.
+- Use the site navigation to access the games (Target Practice / Aim Trainer, Memory Test).
+- Create an account or log in to create a account.
+- Follow on-screen instructions for each game; use your mouse (or keyboard if supported) to play.
 ---
 
 ## 📌 Future Improvements
